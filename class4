@@ -1,0 +1,23 @@
+class Ticket:
+    def __init__(self,ticket,patente, vehiculo,forma_de_pago,cabina,km):
+        self.ticket=ticket
+        self.patente=patente
+        self.vehiculo=vehiculo
+        self.forma_de_pago=forma_de_pago
+        self.cabina=cabina
+        self.km=km
+
+
+    def __str__(self):
+        r = ''
+        r += ' Ticket: '
+        r += "{:010d}".format(self.ticket)
+        r += ' Patente: '
+        r += '{:7s}'.format(self.patente)
+        r += '{:<1}'.format(' Vehiculo: ' + str(self.vehiculo))
+        r += '{:<1}'.format(' Forma de pago: ' + str(self.forma_de_pago))
+        r += '{:<1}'.format(' Cabina: ' + str(self.cabina))
+        r += ' Km: '
+        r += " {:03d}".format(self.km)
+
+        return r
