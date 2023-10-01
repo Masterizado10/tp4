@@ -1,0 +1,152 @@
+import pickle
+import os.path
+import Clase_ticket
+
+
+def validar_numero(inf):
+    min = inf
+
+    while min <= inf and len(str(min)) <= 10:
+        min = int(input("Ingrese numero de Ticket  mayor a cero!!:"))
+    return min
+
+
+def validate_type(mn=0, mx=2):
+    print()
+    vehiculo = int(input("Ingrese un dígito entre 0 y 2 que indica el tipo de vehículo (0: motocicleta, 1: automóvil, 2: camión)"))
+    while vehiculo < mn or vehiculo > mx:
+        vehiculo = int(input("No olvide que el vehículo DEBE ser entre 0 y 2"))
+    return vehiculo
+
+
+def validate_type_pago(mn=1, mx=2):
+    print()
+    pago = int(input("Ingrese un dígito 1 o 2 que indica la forma de pago (1: manual, 2 telepeaje)."))
+    while pago< mn or pago > mx:
+        pago = int(input("No olvide que el pago DEBE ser entre (1: manual, 2 telepeaje)"))
+    return pago
+
+
+def validate_type_cabina(mn=0, mx=4):
+    print()
+    cabina = int(input("Ingrese un dígito entre 0 y 4 que indica el país donde está la cabina que hizo el cobro (0: Argentina - 1: Bolivia - 2: Brasil - 3: Paraguay - 4: Uruguay).  "))
+    while cabina < mn or cabina > mx:
+        cabina = int(input("No olvide que la cabina DEBE ser un numero entre (0: Argentina - 1: Bolivia - 2: Brasil - 3: Paraguay - 4: Uruguay)"))
+    return cabina
+
+
+def validar_patente():
+    print()
+    patente1 = input("Ingrese patente: ").upper()
+
+    while patente1.isalnum()==False:
+        patente1 = input("Solo caracteres alfanuméricos!!").upper()
+    """
+    while len(patente1) > 7:
+        patente1=input("ingrese patente de hasta 7 caracteres: ")
+   print(len(patente1))
+    """
+    if len(patente1) < 7:
+        total_espacios = 7-len(patente1)
+        patente1 = total_espacios*" "+str(patente1)
+
+    return str(patente1)
+
+
+def validar_km(inf):
+    km = inf
+
+    while km <= inf:
+        print()
+        km = int(input("Ingrese cantidad de km recorridos mayor a cero:"))
+        if km <= inf:
+            print("Recuerde que la cantidad de km debe ser positiva")
+    return km
+
+
+def crear_archivo():
+    global FD
+    print('Grabando todos los datos en el archivo ...')
+    m = open("peajes-tp4.csv", 'r')
+    peaje= m.read()
+
+
+    m.close()
+
+    oficial = open('peaje75.txt',"wb")
+    pickle.dump(peaje,oficial)
+
+    print('... hecho')
+    print()
+
+
+
+
+def cargar_datos():
+    v = []
+    ticket = int(validar_numero(0))
+    patente = validar_patente()
+    vehiculo = validate_type()
+    forma_de_pago = validate_type_pago()
+    cabina = validate_type_cabina()
+    km = int(validar_km(0))
+
+    v.append(Clase_ticket.Ticket(ticket, patente, vehiculo, forma_de_pago, cabina, km))
+
+    return v
+
+def crear(v):
+    global FD
+    if len(v) == 0:
+        print('No hay datos cargados...')
+        print()
+        return
+    print('Grabando todos los datos en el archivo', FD, '...')
+    m = open(FD, 'ab')
+    for paciente in v:
+        pickle.dump(paciente, m)
+    m.close()
+    print('... hecho')
+    print()
+
+def leer():
+
+    global FD
+    if not os.path.exists(FD):
+        print('El archivo', FD, 'no existe...')
+        print()
+        return
+    tbm = os.path.getsize(FD)
+    m = open(FD, 'rb')
+    print('Contenido del archivo', FD, '...')
+    while m.tell() < tbm:
+        pac = pickle.load(m)
+        print(pac)
+    m.close()
+    print()
+
+
+
+def test():
+
+    global FD
+    FD = "peaje75.txt"
+    op = 1
+    v=[]
+    if op == 1:
+        crear_archivo()
+
+    elif op ==2:
+        v=cargar_datos()
+        crear(v)
+        leer()
+        #mostrar_archivo(v)
+
+
+
+
+
+if __name__  == '__main__':
+    test()
+
+
